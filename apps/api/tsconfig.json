@@ -2,5 +2,13 @@
   "extends": "@saas/typescript/node.json",
   "include": [
     "src/**/*"
-  ]
+  ],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    }
+  }
 }

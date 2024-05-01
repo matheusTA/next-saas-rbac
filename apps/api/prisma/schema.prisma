@@ -107,10 +107,11 @@ model Organization {
   name                     String
   slug                     String   @unique
   domain                   String?  @unique
+  avatarUrl                String?
   shouldAttachUserByDomain Boolean  @default(false)
 
-  owner  User   @relation(fields: [userId], references: [id])
-  userId String
+  owner   User   @relation(fields: [ownerId], references: [id])
+  ownerId String
 
   invites  Invite[]
   members  Member[]
@@ -131,8 +132,8 @@ model Project {
   Organization   Organization @relation(fields: [organizationId], references: [id])
   organizationId String
 
-  owner  User   @relation(fields: [userId], references: [id])
-  userId String
+  owner   User   @relation(fields: [ownerId], references: [id])
+  ownerId String
 
   @@map("projects")
 }
