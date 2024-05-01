@@ -1,6 +1,7 @@
 import { fastify } from 'fastify'
 import fastifyCors from '@fastify/cors'
 import fastifySwagger from '@fastify/swagger'
+import fastifyJwt from '@fastify/jwt'
 import fastifySwaggerUi from '@fastify/swagger-ui'
 import {
   serializerCompiler,
@@ -9,6 +10,8 @@ import {
   jsonSchemaTransform,
 } from 'fastify-type-provider-zod'
 import { createAccount } from './routes/auth/create-account'
+import { authenticateWithPassword } from './routes/auth/authenticate-with-password'
+import { env } from '@/config/env'
 
 const app = fastify().withTypeProvider<ZodTypeProvider>()
 
@@ -31,10 +34,15 @@ app.register(fastifySwaggerUi, {
   routePrefix: '/docs',
 })
 
+app.register(fastifyJwt, {
+  secret: env.JWT_SECRET,
+})
+
 app.register(fastifyCors)
 
 app.register(createAccount)
+app.register(authenticateWithPassword)
 
-app.listen({ port: 3333 }).then(() => {
+app.listen({ port: env.PORT }).then(() => {
   console.log('HTTP server started')
 })

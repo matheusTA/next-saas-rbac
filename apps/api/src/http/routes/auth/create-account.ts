@@ -9,11 +9,19 @@ export async function createAccount(app: FastifyInstance) {
     '/users',
     {
       schema: {
+        tags: ['auth'],
+        summary: 'Create a new account',
         body: z.object({
           name: z.string(),
           email: z.string().email(),
           password: z.string().min(6),
         }),
+        response: {
+          201: z.object({}),
+          400: z.object({
+            message: z.string(),
+          }),
+        },
       },
     },
     async (request, reply) => {
@@ -26,9 +34,16 @@ export async function createAccount(app: FastifyInstance) {
       })
 
       if (userWithSameEmail) {
-        reply.status(400)
-        return { message: 'Email already in use' }
+        return reply.status(400).send({ message: 'Email already in use' })
       }
+
+      const [, domail] = email.split('@')
+      const autoJoinOrganization = await prisma.organization.findFirst({
+        where: {
+          domain: domail,
+          shouldAttachUserByDomain: true,
+        },
+      })
 
       const passwordHash = await hash(password, 6)
 
@@ -37,6 +52,13 @@ export async function createAccount(app: FastifyInstance) {
           name,
           email,
           passwordHash,
+          membersOn: autoJoinOrganization
+            ? {
+                create: {
+                  organizationId: autoJoinOrganization.id,
+                },
+              }
+            : undefined,
         },
       })
 
