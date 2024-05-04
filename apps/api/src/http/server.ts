@@ -13,7 +13,7 @@ import { createAccount } from './routes/auth/create-account'
 import { authenticateWithPassword } from './routes/auth/authenticate-with-password'
 import { env } from '@/config/env'
 import { getProfile } from './routes/auth/get-profile'
-import { errorHandler } from './error-handler'
+import { errorHandler } from './_errors'
 
 const app = fastify().withTypeProvider<ZodTypeProvider>()
 
