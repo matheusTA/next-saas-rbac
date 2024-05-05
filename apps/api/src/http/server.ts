@@ -9,13 +9,14 @@ import {
   ZodTypeProvider,
   jsonSchemaTransform,
 } from 'fastify-type-provider-zod'
-import { env } from '@/config/env'
 import { errorHandler } from './_errors'
 import { getProfile } from './routes/auth/get-profile'
 import { createAccount } from './routes/auth/create-account'
 import { authenticateWithPassword } from './routes/auth/authenticate-with-password'
 import { requestPasswordRecover } from './routes/auth/request-password-recover'
 import { resetPassword } from './routes/auth/reset-password'
+import { authenticateWithGithub } from './routes/auth/authenticate-with-github'
+import { env } from '@saas/env'
 
 const app = fastify().withTypeProvider<ZodTypeProvider>()
 
@@ -31,7 +32,16 @@ app.register(fastifySwagger, {
       description: 'Full-stack SaaS app with multi-tenant and RBAC',
       version: '1.0.0',
     },
-    servers: [],
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+          description: 'JWT token',
+        },
+      },
+    },
   },
   transform: jsonSchemaTransform,
 })
@@ -47,10 +57,11 @@ app.register(fastifyCors)
 
 app.register(createAccount)
 app.register(authenticateWithPassword)
+app.register(authenticateWithGithub)
 app.register(getProfile)
 app.register(requestPasswordRecover)
 app.register(resetPassword)
 
-app.listen({ port: env.PORT }).then(() => {
+app.listen({ port: env.SERVER_PORT }).then(() => {
   console.log('HTTP server started')
 })
