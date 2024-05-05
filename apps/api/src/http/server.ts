@@ -9,11 +9,13 @@ import {
   ZodTypeProvider,
   jsonSchemaTransform,
 } from 'fastify-type-provider-zod'
+import { env } from '@/config/env'
+import { errorHandler } from './_errors'
+import { getProfile } from './routes/auth/get-profile'
 import { createAccount } from './routes/auth/create-account'
 import { authenticateWithPassword } from './routes/auth/authenticate-with-password'
-import { env } from '@/config/env'
-import { getProfile } from './routes/auth/get-profile'
-import { errorHandler } from './_errors'
+import { requestPasswordRecover } from './routes/auth/request-password-recover'
+import { resetPassword } from './routes/auth/reset-password'
 
 const app = fastify().withTypeProvider<ZodTypeProvider>()
 
@@ -46,6 +48,8 @@ app.register(fastifyCors)
 app.register(createAccount)
 app.register(authenticateWithPassword)
 app.register(getProfile)
+app.register(requestPasswordRecover)
+app.register(resetPassword)
 
 app.listen({ port: env.PORT }).then(() => {
   console.log('HTTP server started')
