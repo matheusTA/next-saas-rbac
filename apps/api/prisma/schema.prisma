@@ -78,7 +78,7 @@ model Invite {
   author User?   @relation(fields: [userId], references: [id])
   userId String?
 
-  Organization   Organization @relation(fields: [organizationId], references: [id])
+  organization   Organization @relation(fields: [organizationId], references: [id])
   organizationId String
 
   @@unique([email, organizationId])
@@ -90,7 +90,7 @@ model Member {
   id   String @id @default(uuid())
   role Role   @default(MEMBER)
 
-  Organization   Organization @relation(fields: [organizationId], references: [id])
+  organization   Organization @relation(fields: [organizationId], references: [id])
   organizationId String
 
   user   User   @relation(fields: [userId], references: [id])
@@ -101,14 +101,14 @@ model Member {
 }
 
 model Organization {
-  createdAt                DateTime @default(now())
-  updatedAt                DateTime @updatedAt
-  id                       String   @id @default(uuid())
-  name                     String
-  slug                     String   @unique
-  domain                   String?  @unique
-  avatarUrl                String?
-  shouldAttachUserByDomain Boolean  @default(false)
+  createdAt                 DateTime @default(now())
+  updatedAt                 DateTime @updatedAt
+  id                        String   @id @default(uuid())
+  name                      String
+  slug                      String   @unique
+  domain                    String?  @unique
+  avatarUrl                 String?
+  shouldAttachUsersByDomain Boolean  @default(false)
 
   owner   User   @relation(fields: [ownerId], references: [id])
   ownerId String
@@ -129,7 +129,7 @@ model Project {
   slug        String   @unique
   avatarUrl   String?
 
-  Organization   Organization @relation(fields: [organizationId], references: [id])
+  organization   Organization @relation(fields: [organizationId], references: [id])
   organizationId String
 
   owner   User   @relation(fields: [ownerId], references: [id])
