@@ -5,16 +5,16 @@ import { FastifyInstance } from 'fastify'
 import { ZodTypeProvider } from 'fastify-type-provider-zod'
 import z from 'zod'
 
-export async function acceptInvite(app: FastifyInstance) {
+export async function rejectInvite(app: FastifyInstance) {
   app
     .withTypeProvider<ZodTypeProvider>()
     .register(authMiddleware)
     .post(
-      '/invites/:inviteId/accept',
+      '/invites/:inviteId/reject',
       {
         schema: {
           tags: ['invites'],
-          summary: 'Accept an invite',
+          summary: 'Reject an invite',
           security: [
             {
               bearerAuth: [],
@@ -53,19 +53,9 @@ export async function acceptInvite(app: FastifyInstance) {
           throw new BadRequestError('This invite not belongs to you')
         }
 
-        await prisma.$transaction([
-          prisma.member.create({
-            data: {
-              userId,
-              role: invite.role,
-              organizationId: invite.organizationId,
-            },
-          }),
-
-          prisma.invite.delete({
-            where: { id: invite.id },
-          }),
-        ])
+        await prisma.invite.delete({
+          where: { id: invite.id },
+        })
 
         return reply.status(204).send()
       }
