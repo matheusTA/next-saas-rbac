@@ -4,13 +4,17 @@ import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
 import githubIcon from '@/assets/github-icon.svg'
 
-import Link from 'next/link'
 import Image from 'next/image'
-import { signInWithEmailAndPassword } from './actions'
+import Link from 'next/link'
 
-export default function SignInPage() {
+export default function SignUpPage() {
   return (
-    <form action={signInWithEmailAndPassword} className="space-y-4">
+    <form action="" className="space-y-4">
+      <div className="space-y-1">
+        <Label htmlFor="name">Name</Label>
+        <Input id="name" name="name" />
+      </div>
+
       <div className="space-y-1">
         <Label htmlFor="email">Email</Label>
         <Input id="email" name="email" type="email" />
@@ -19,32 +23,34 @@ export default function SignInPage() {
       <div className="space-y-1">
         <Label htmlFor="password">Password</Label>
         <Input id="password" name="password" type="password" />
+      </div>
 
-        <Link
-          href="/auth/forgot-password"
-          className="text-xs font-medium text-foreground hover:underline"
-        >
-          Forgot your password
-        </Link>
+      <div className="space-y-1">
+        <Label htmlFor="password-confirmation">Confirm your password</Label>
+        <Input
+          id="password-confirmation"
+          name="password-confirmation"
+          type="password"
+        />
       </div>
 
       <Button type="submit" className="w-full">
-        Sign in with e-mail
+        Create account
       </Button>
 
       <Button className="w-full" variant="link" asChild>
-        <Link href="/auth/sign-up">Create new account</Link>
+        <Link href="/auth/sign-in">Already registered? Sign in</Link>
       </Button>
 
       <Separator />
 
-      <Button type="button" variant="outline" className="w-full">
+      <Button type="button" variant="outline" size="sm" className="w-full">
         <Image
           alt="GitHub icon"
           src={githubIcon}
           className="mr-2 size-4 dark:invert"
         />
-        Sign in with GitHub
+        Sign up with GitHub
       </Button>
     </form>
   )
