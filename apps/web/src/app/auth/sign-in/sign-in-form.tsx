@@ -1,6 +1,5 @@
 'use client'
 
-import { useActionState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { AlertTriangle, Loader2 } from 'lucide-react'
@@ -11,19 +10,22 @@ import { Separator } from '@/components/ui/separator'
 import githubIcon from '@/assets/github-icon.svg'
 import { signInWithEmailAndPassword } from './actions'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { useFormState } from '@/hooks/use-form-state'
+import { useRouter } from 'next/navigation'
 
 export function SignInForm() {
-  const [{ success, message, errors }, formAction, isPeding] = useActionState(
+  const router = useRouter()
+  const [{ success, message, errors }, handleSubmit, isPeding] = useFormState(
     signInWithEmailAndPassword,
     {
-      success: false,
-      message: null,
-      errors: null,
+      onSuccess: () => {
+        router.push('/')
+      },
     }
   )
 
   return (
-    <form action={formAction} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-4">
       {success === false && message && (
         <Alert variant="destructive">
           <AlertTriangle className="size-4" />
