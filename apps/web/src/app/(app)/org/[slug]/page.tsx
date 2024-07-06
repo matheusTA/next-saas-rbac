@@ -1,3 +1,12 @@
+import { Header } from '@/components/header'
+
 export default async function OrganizationProjects() {
-  return <h1>Organization Projects</h1>
+  return (
+    <div className="space-y-4 py-4">
+      <Header />
+      <main className="mx-auto w-full max-w-[1200px]">
+        Organization projects
+      </main>
+    </div>
+  )
 }
